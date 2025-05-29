@@ -23,8 +23,7 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  display: flex;
+  margin: 0 auto;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -65,4 +64,11 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
 }
