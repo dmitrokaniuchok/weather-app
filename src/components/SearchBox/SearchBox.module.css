@@ -1,0 +1,55 @@
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.searchBox input {
+  padding: 10px 16px;
+  border: 2px solid #00bcd4;
+  border-radius: 12px;
+  width: 250px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: #004d60;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.searchBox input:focus {
+  border-color: #00acc1;
+  outline: none;
+  box-shadow: 0 0 8px #00acc177;
+}
+
+.searchBox button {
+  padding: 10px 20px;
+  border: none;
+  background: linear-gradient(to right, #00bcd4, #4dd0e1);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.searchBox button:hover {
+  background: linear-gradient(to right, #00acc1, #26c6da);
+}
+
+.searchBox button:active {
+  transform: scale(0.95);
+}
+
+/* Адаптивність */
+@media (max-width: 600px) {
+  .searchBox {
+    flex-direction: column;
+  }
+
+  .searchBox input,
+  .searchBox button {
+    width: 100%;
+  }
+}
