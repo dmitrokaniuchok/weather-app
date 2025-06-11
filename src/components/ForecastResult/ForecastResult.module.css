@@ -1,0 +1,53 @@
+.forecastResult {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #004d60;
+  width: 100%;
+  padding: 20px;
+
+  overflow-x: auto;
+}
+
+.forecastItem {
+  flex: 0 0 auto;
+  background: rgba(0, 77, 64, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 77, 64, 0.2);
+  transition: transform 0.3s ease;
+  cursor: default;
+}
+
+.forecastItem:hover {
+  transform: scale(1.05);
+}
+
+.forecastItem > div {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #006064;
+}
+
+.description {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #004d60;
+  margin-top: 4px;
+}
+
+/* Адаптивність */
+@media (max-width: 600px) {
+  .forecastResult {
+    padding: 16px;
+  }
+
+  .forecastItem {
+    min-width: 80px;
+    padding: 8px;
+  }
+}

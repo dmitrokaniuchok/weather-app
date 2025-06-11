@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { fetchWeather } from "../../../weatherApi.js";
+import { fetchWeather, fetchForecast } from "../../weatherApi.js";
 import css from "./Weather.module.css";
 import toast from "react-hot-toast";
 import SearchBox from "../SearchBox/SearchBox.jsx";
 import WeatherResult from "../WeatherResult/WeatherResult.jsx";
+import ForecastResult from "../ForecastResult/ForecastResult.jsx";
 
 export default function Weather() {
   // const defaultCity = "Харків";
@@ -11,6 +12,7 @@ export default function Weather() {
 
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
+  const [forecast, setForecast] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,9 +24,16 @@ export default function Weather() {
     setLoading(true);
     setError("");
     setWeather(null);
+    setForecast(null);
+
     try {
-      const data = await fetchWeather(cityName);
-      setWeather(data);
+      const dataWeather = await fetchWeather(cityName);
+      const dataForecast = await fetchForecast(cityName);
+
+      console.log("Forecast data:", dataForecast);
+
+      setWeather(dataWeather);
+      setForecast(dataForecast);
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -52,24 +61,43 @@ export default function Weather() {
     setLoading(true);
     setError("");
     setWeather(null);
+    setForecast(null);
 
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         const { latitude, longitude } = coords;
 
         try {
-          const response = await fetch(
+          // Поточна погода
+          const responseWeather = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${
               import.meta.env.VITE_WEATHER_API_KEY
             }&units=metric&lang=ua`
           );
 
-          if (!response.ok) {
-            throw new Error("Не вдалося отримати погоду за геолокацією.");
+          if (!responseWeather.ok) {
+            throw new Error(
+              "Не вдалося отримати поточну погоду за геолокацією."
+            );
           }
 
-          const data = await response.json();
-          setWeather(data);
+          const dataWeather = await responseWeather.json();
+
+          // Запит на прогноз на 5 днів
+          const responseForecast = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${
+              import.meta.env.VITE_WEATHER_API_KEY
+            }&units=metric&lang=ua`
+          );
+
+          if (!responseForecast.ok) {
+            throw new Error("Не вдалося отримати прогноз за геолокацією.");
+          }
+
+          const dataForecast = await responseForecast.json();
+
+          setWeather(dataWeather);
+          setForecast(dataForecast);
           setCity("");
         } catch (err) {
           toast.error(err.message);
@@ -87,6 +115,7 @@ export default function Weather() {
   const handleClear = () => {
     setCity("");
     setWeather(null);
+    setForecast(null);
     setError("");
     setLoading(false);
     inputRef.current?.focus();
@@ -105,10 +134,12 @@ export default function Weather() {
         inputRef={inputRef}
       />
 
-      {loading && <p>Завантаження...</p>}
+      {loading && <div className={css.loader} />}
+
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {weather && <WeatherResult weather={weather} />}
+      {forecast && <ForecastResult forecast={forecast} />}
     </div>
   );
 }
